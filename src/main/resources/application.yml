@@ -3,3 +3,8 @@ spring:
     name: baby-album-api
   profiles:
     active: local
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/test?useSSL=false
+    username: db_user
+    password: db_password

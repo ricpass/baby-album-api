@@ -1,4 +1,4 @@
-package com.ricardopassarella.nbrown.domain.kid;
+package com.ricardopassarella.nbrown.domain.baby;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +11,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/baby")
 @RequiredArgsConstructor
-public class KidController {
+class KidController {
 
     @GetMapping
     ResponseEntity<String> get(@RequestHeader(value = "Client-Id") String clientId) {
