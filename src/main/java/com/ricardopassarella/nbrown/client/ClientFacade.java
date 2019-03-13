@@ -1,7 +1,7 @@
-package com.ricardopassarella.nbrown.domain.client;
+package com.ricardopassarella.nbrown.client;
 
 
-import com.ricardopassarella.nbrown.domain.client.dto.Client;
+import com.ricardopassarella.nbrown.client.dto.BabyClient;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
@@ -11,7 +11,7 @@ public class ClientFacade {
 
     private final ClientRepository repository;
 
-    public Optional<Client> findById(String clientId) {
+    public Optional<BabyClient> findById(String clientId) {
         return repository.findById(clientId);
     }
 
