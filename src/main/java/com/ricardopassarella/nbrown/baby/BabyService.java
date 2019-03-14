@@ -1,19 +1,26 @@
 package com.ricardopassarella.nbrown.baby;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-public class BabyService {
+@RequiredArgsConstructor
+class BabyService {
 
+    private final BabyRepository repository;
 
-    public Optional<BabyResponse> getBabyDetails(String clientId) {
+    Optional<BabyResponse> getBabyDetails(String clientId) {
 
-        return Optional.empty();
+        return repository.getBabyDetails(clientId);
     }
 
-    public void updateBabyDetails(String clientId, BabyRequest babyRequest) {
+    void updateBabyDetails(String clientId, BabyRequest babyRequest) {
+        boolean updated = repository.update(clientId, babyRequest);
 
+        if (!updated){
+            repository.insert(clientId, babyRequest);
+        }
     }
 }

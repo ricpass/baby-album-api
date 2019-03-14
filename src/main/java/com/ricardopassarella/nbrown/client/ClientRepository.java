@@ -1,8 +1,7 @@
 package com.ricardopassarella.nbrown.client;
 
-import com.ricardopassarella.nbrown.client.dto.BabyClient;
+import com.ricardopassarella.nbrown.client.dto.ClientResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -18,7 +17,7 @@ class ClientRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    Optional<BabyClient> findById(String id) {
+    Optional<ClientResponse> findById(String id) {
         String sql = "SELECT * from client where id = :id";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -27,11 +26,11 @@ class ClientRepository {
         return jdbcTemplate.query(sql, params, findByIdExtractor());
     }
 
-    private ResultSetExtractor<Optional<BabyClient>> findByIdExtractor() {
+    private ResultSetExtractor<Optional<ClientResponse>> findByIdExtractor() {
         return rs -> {
             if (rs.next()) {
                 return Optional.ofNullable(rs.getString("id"))
-                        .map(BabyClient::new);
+                        .map(ClientResponse::new);
             }
             return Optional.empty();
         };

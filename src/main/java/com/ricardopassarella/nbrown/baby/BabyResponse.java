@@ -1,14 +1,12 @@
 package com.ricardopassarella.nbrown.baby;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Getter
 @Setter
+@Builder
 @EqualsAndHashCode
 @RequiredArgsConstructor
 class BabyResponse {

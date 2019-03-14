@@ -1,8 +1,10 @@
 package com.ricardopassarella.nbrown.baby
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import spock.lang.Specification
+import spock.lang.Subject
 import spock.lang.Unroll
 
 import java.time.LocalDate
@@ -14,13 +16,19 @@ class BabyControllerTest extends Specification {
 
     def service = Mock BabyService
 
+    @Subject
+    static BabyController controller
+
+    void setup() {
+        controller = new BabyController(service)
+    }
+
     @Unroll
     def "when getting baby details and receive response #serviceResponse from service, should return #expectedResponse"() {
         given:
-        def babyController = new BabyController(service)
         def clientId = 'e0b9e335251a74cad293597d6b0d8341'
         when:
-        def response = babyController.getBabyDetails(clientId)
+        def response = controller.getBabyDetails(clientId)
 
         then:
         1 * service.getBabyDetails(clientId) >> serviceResponse
@@ -36,12 +44,12 @@ class BabyControllerTest extends Specification {
 
     def "when updating baby details from service, should return #expectedResponse"() {
         given:
-        def babyController = new BabyController(service)
         def babyRequest = new BabyRequest("bla", "bla2", LocalDate.now())
+
         def clientId = 'e0b9e335251a74cad293597d6b0d8341'
 
         when:
-        def response = babyController.updateBabyDetails(clientId, babyRequest)
+        def response = controller.updateBabyDetails(clientId, babyRequest)
 
         then:
         1 * service.updateBabyDetails(clientId, babyRequest)

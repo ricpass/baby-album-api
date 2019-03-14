@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class BabyClient {
+public class ClientResponse {
 
     private final String id;
 
