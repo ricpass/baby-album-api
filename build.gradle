@@ -33,6 +33,7 @@ targetCompatibility = 1.8
 dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
 
     runtime group: 'mysql', name: 'mysql-connector-java', version: '6.0.6'
     compile group: 'org.flywaydb', name: 'flyway-core', version: '5.2.4'
@@ -45,5 +46,10 @@ dependencies {
     testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombokVersion
     testCompileOnly group: 'org.projectlombok', name: 'lombok', version: lombokVersion
 
-    testCompile("junit:junit")
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.1'
+    testCompile group: 'org.codehaus.groovy.modules.http-builder', name: 'http-builder', version: '0.7.1'
+    testCompile group: 'org.spockframework', name: 'spock-core', version: '1.1-groovy-2.4'
+    testCompile group: 'net.bytebuddy', name: 'byte-buddy', version: '1.8.11'
+
 }

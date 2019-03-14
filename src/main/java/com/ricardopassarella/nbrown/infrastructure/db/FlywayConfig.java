@@ -20,7 +20,10 @@ public class FlywayConfig {
         Flyway flyway = Flyway.configure()
                 .dataSource(dataSource)
                 .baselineOnMigrate(true)
-                .locations("filesystem:src/main/resources/db/migration/common/").load();
+                .locations(
+                        "filesystem:src/main/resources/db/migration/common/",
+                        "filesystem:src/main/resources/db/migration/localdata/")
+                .load();
 
         // TODO change location for classpath if env != local
 

@@ -2,6 +2,7 @@ package com.ricardopassarella.nbrown.client;
 
 import com.ricardopassarella.nbrown.client.dto.BabyClient;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
