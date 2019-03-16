@@ -17,7 +17,7 @@ create TABLE baby_image (
   latitude DOUBLE,
   longitude DOUBLE,
   image_datetime datetime,
-  client_id VARCHAR(36) NOT NULL UNIQUE,
+  client_id VARCHAR(36) NOT NULL,
 
   FOREIGN KEY (client_id) references client(id)
 );
