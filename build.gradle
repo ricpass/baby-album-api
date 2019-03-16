@@ -31,12 +31,15 @@ targetCompatibility = 1.8
 dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
+    compile group: 'org.springframework.hateoas', name: 'spring-hateoas', version: '0.25.1.RELEASE'
 
     runtime group: 'mysql', name: 'mysql-connector-java', version: '6.0.6'
     compile group: 'org.flywaydb', name: 'flyway-core', version: '5.2.4'
 
     compile group: 'org.slf4j', name: 'jcl-over-slf4j'
     compile group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '5.2'
+
+    compile group: 'com.drewnoakes', name: 'metadata-extractor', version: '2.11.0'
 
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombokVersion
     compileOnly group: 'org.projectlombok', name: 'lombok', version: lombokVersion
