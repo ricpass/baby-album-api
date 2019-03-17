@@ -2,6 +2,10 @@ buildscript {
     repositories {
         mavenCentral()
     }
+
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.4'
+    }
 }
 
 plugins {
@@ -15,6 +19,11 @@ plugins {
     id "org.springframework.boot" version '2.1.3.RELEASE'
     id 'io.spring.dependency-management' version '1.0.6.RELEASE'
 }
+
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'application'
+
+mainClassName='com.ricardopassarella.nbrown.BabyAlbumApplication'
 
 repositories {
     mavenCentral()
