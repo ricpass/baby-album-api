@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 public class BabyAlbumResponseWithLinks {
 
     private final String id;
+    private final String kidAge;
     private final BigDecimal latitude;
     private final BigDecimal longitude;
     private final LocalDateTime dateTime;

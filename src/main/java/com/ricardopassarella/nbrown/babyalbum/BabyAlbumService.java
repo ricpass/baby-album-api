@@ -87,9 +87,8 @@ class BabyAlbumService {
 
     PageableResponse<List<BabyAlbumResponse>> getImagesAsBase64(String clientId, int page) {
         int offset = page * pageLimit;
-        int limit = offset + pageLimit;
 
-        List<BabyAlbumResponse> response = repository.findImagesByClientId(clientId, limit, offset)
+        List<BabyAlbumResponse> response = repository.findImagesByClientId(clientId, pageLimit, offset)
                 .stream()
                 .map(this::createBabyAlbumResponse)
                 .collect(Collectors.toList());
@@ -103,15 +102,7 @@ class BabyAlbumService {
         byte[] imageBytes = fileHandler.readImageFromFile(dto.getId());
         String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
 
-        String age = babyFacade.findBabyDetails(dto.getClientId())
-                .map(BabyResponse::getDateOfBirth)
-                .map(dateOfBirth -> {
-                    LocalDate now = LocalDate.now();
-
-                    Period period = Period.between(dateOfBirth, now);
-
-                    return String.format("%s years and %s months", period.getYears(), period.getMonths());
-                }).orElse(null);
+        String age = getKidAge(dto.getClientId());
 
         return BabyAlbumResponse.builder()
                 .id(dto.getId())
@@ -123,14 +114,28 @@ class BabyAlbumService {
                 .build();
     }
 
+    private String getKidAge(String clientId) {
+        return babyFacade.findBabyDetails(clientId)
+                .map(BabyResponse::getDateOfBirth)
+                .map(dateOfBirth -> {
+                    LocalDate now = LocalDate.now();
+
+                    Period period = Period.between(dateOfBirth, now);
+
+                    return String.format("%s years and %s months", period.getYears(), period.getMonths());
+                }).orElse(null);
+    }
+
     PageableResponse<List<BabyAlbumResponseWithLinks>> getImagesAsLinks(String clientId, int page) {
         int offset = page * pageLimit;
-        int limit = offset + pageLimit;
 
-        List<BabyAlbumResponseWithLinks> response = repository.findImagesByClientId(clientId, limit, offset)
+        String kidAge = getKidAge(clientId);
+
+        List<BabyAlbumResponseWithLinks> response = repository.findImagesByClientId(clientId, pageLimit, offset)
                 .stream()
                 .map(dto -> BabyAlbumResponseWithLinks.builder()
                         .id(dto.getId())
+                        .kidAge(kidAge)
                         .latitude(dto.getLatitude())
                         .longitude(dto.getLongitude())
                         .dateTime(dto.getDateTime())
