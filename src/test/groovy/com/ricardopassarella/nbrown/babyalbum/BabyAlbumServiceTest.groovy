@@ -1,5 +1,6 @@
 package com.ricardopassarella.nbrown.babyalbum
 
+import com.ricardopassarella.nbrown.baby.BabyFacade
 import com.ricardopassarella.nbrown.babyalbum.dto.PictureMetadata
 import org.springframework.mock.web.MockMultipartFile
 import spock.lang.Specification
@@ -13,7 +14,7 @@ class BabyAlbumServiceTest extends Specification {
     def repository = Mock BabyAlbumRepository
     def metadataExtractor = Mock MetadataExtractor
     def fileHandler = Mock BabyFileHandler
-
+    def babyFacade = Mock BabyFacade
 
     @Subject
     BabyAlbumService service
@@ -22,7 +23,9 @@ class BabyAlbumServiceTest extends Specification {
         service = new BabyAlbumService(
                 repository,
                 metadataExtractor,
-                fileHandler)
+                fileHandler,
+                babyFacade,
+                2)
     }
 
     def "when upload image as multipartFile"() {
