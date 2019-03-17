@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -32,7 +33,9 @@ class BabyRepository {
                 return Optional.of(BabyResponse.builder()
                         .name(rs.getString("name"))
                         .gender(rs.getString("gender"))
-                        .dateOfBirth(rs.getDate("date_of_birth").toLocalDate())
+                        .dateOfBirth(
+                                Optional.ofNullable(rs.getDate("date_of_birth"))
+                                        .map(Date::toLocalDate).orElse(null))
                         .build());
             }
             return Optional.empty();
