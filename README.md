@@ -28,16 +28,16 @@ Run the API: `java -jar build/libs/baby-album-api.jar`
 
 Recommendation: Import postman collection 
 
-| Method | Route | Description |
-|--------|-------|-------------|
-| GET    | `/baby` | Get baby details (name, gender and date_of_birth) |
-| PUT    | `/baby` | Update baby details. Body must contain: name, gender and date_of_birth |
-| GET    | `/baby/picture/{imageId}` | Get image as byte[] |
-| POST   | `/baby/picture` | Upload image as MultipartFile. See here how to test in Postman |
-| GET    | `/baby/picture` | Get a list of images with the link to get each image |
-| GET    | `/baby/picture/json/{imageId}` | Get image encoded as Base64, image details, and baby age|
-| POST   | `/baby/picture/json` | Upload image encoded as Base64|
-| GET    | `/baby/picture/json` | Get a list of images encoded as Base64 and details. This method can be inefficient, use /baby/picture to get Links and then use /baby/picture/json/{imageId} in parallel.|
+| Method | Description |
+|--------|-------------|
+| GET     `/baby` | Get baby details (name, gender and date_of_birth) |
+| PUT     `/baby` | Update baby details. Body must contain: name, gender and date_of_birth |
+| GET     `/baby/picture/{imageId}` | Get image as byte[] |
+| POST    `/baby/picture` | Upload image as MultipartFile. See here how to test in Postman |
+| GET     `/baby/picture` | Get a list of images with the link to get each image |
+| GET     `/baby/picture/json/{imageId}` | Get image encoded as Base64, image details, and baby age|
+| POST    `/baby/picture/json` | Upload image encoded as Base64|
+| GET     `/baby/picture/json` | Get a list of images encoded as Base64 and details. This method can be inefficient, use /baby/picture to get Links and then use /baby/picture/json/{imageId} in parallel.|
 
 
 ### Improvements ###
