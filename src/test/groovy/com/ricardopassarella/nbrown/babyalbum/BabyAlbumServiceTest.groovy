@@ -38,6 +38,7 @@ class BabyAlbumServiceTest extends Specification {
         def multipartFile = new MockMultipartFile("file", imageBytes)
         def clientId = "e0b9e335251a74cad293597d6b0d8341"
         def imageId = "0dde80fc97fe48b49cb3bd61e09d8ad9"
+        def fullAddress = "Picadilly Gardens"
 
         def metadata = PictureMetadata.builder().build()
 
@@ -47,8 +48,11 @@ class BabyAlbumServiceTest extends Specification {
         then: "read file metadata"
         1 * metadataExtractor.read(imageBytes) >> metadata
 
+        and: "get full address reverse geocoding"
+        1 * reverseGeocoding.getFullAddress(metadata.getLatitude(), metadata.getLongitude()) >> Optional.of("Picadilly Gardens")
+
         and: "save details on the database"
-        1 * repository.insert(clientId, metadata) >> imageId
+        1 * repository.insert(clientId, metadata, fullAddress) >> imageId
 
         and: "save image on local storage"
         1 * fileHandler.save(imageBytes, imageId)
@@ -75,8 +79,11 @@ class BabyAlbumServiceTest extends Specification {
         then: "read file metadata"
         1 * metadataExtractor.read(imageBytes) >> metadata
 
+        and: "get full address reverse geocoding"
+        1 * reverseGeocoding.getFullAddress(metadata.getLatitude(), metadata.getLongitude()) >> Optional.empty()
+
         and: "save details on the database"
-        1 * repository.insert(clientId, metadata) >> imageId
+        1 * repository.insert(clientId, metadata, null) >> imageId
 
         and: "save image on local storage"
         1 * fileHandler.save(imageBytes, imageId)
