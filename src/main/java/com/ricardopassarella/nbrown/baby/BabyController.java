@@ -1,5 +1,6 @@
 package com.ricardopassarella.nbrown.baby;
 
+import com.ricardopassarella.nbrown.baby.dto.BabyResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

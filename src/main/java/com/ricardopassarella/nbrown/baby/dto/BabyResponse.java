@@ -1,4 +1,4 @@
-package com.ricardopassarella.nbrown.baby;
+package com.ricardopassarella.nbrown.baby.dto;
 
 import lombok.*;
 
@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Builder
 @EqualsAndHashCode
 @RequiredArgsConstructor
-class BabyResponse {
+public class BabyResponse {
 
     private final String name;
     private final String gender;

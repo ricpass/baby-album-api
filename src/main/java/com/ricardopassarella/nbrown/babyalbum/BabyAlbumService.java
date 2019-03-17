@@ -1,5 +1,7 @@
 package com.ricardopassarella.nbrown.babyalbum;
 
+import com.ricardopassarella.nbrown.baby.BabyFacade;
+import com.ricardopassarella.nbrown.baby.dto.BabyResponse;
 import com.ricardopassarella.nbrown.babyalbum.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,9 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +28,8 @@ class BabyAlbumService {
     private final BabyAlbumRepository repository;
     private final MetadataExtractor metadataExtractor;
     private final BabyFileHandler fileHandler;
+
+    private final BabyFacade babyFacade;
 
     @Transactional
     public BabyAlbumUploadResponse processImage(MultipartFile multipartFile, String clientId) {
@@ -76,8 +82,19 @@ class BabyAlbumService {
         byte[] imageBytes = fileHandler.readImageFromFile(dto.getId());
         String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
 
+        String age = babyFacade.findBabyDetails(dto.getClientId())
+                .map(BabyResponse::getDateOfBirth)
+                .map(dateOfBirth -> {
+                    LocalDate now = LocalDate.now();
+
+                    Period period = Period.between(dateOfBirth, now);
+
+                    return String.format("%s years and %s months", period.getYears(), period.getMonths());
+                }).orElse(null);
+
         return BabyAlbumResponse.builder()
                 .id(dto.getId())
+                .kidAge(age)
                 .latitude(dto.getLatitude())
                 .longitude(dto.getLongitude())
                 .dateTime(dto.getDateTime())
@@ -113,7 +130,7 @@ class BabyAlbumService {
 
         boolean deleted = repository.deleteImageEntry(imageId, clientId);
 
-        if (deleted){
+        if (deleted) {
             fileHandler.delete(imageId);
         }
 
