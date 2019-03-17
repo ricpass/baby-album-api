@@ -12,7 +12,7 @@ class BabyFileHandlerTest extends Specification {
     BabyFileHandler fileHandler
 
     void setup() {
-        fileHandler = new BabyFileHandler("")
+        fileHandler = new BabyFileHandler()
     }
 
     def "test file create and read"() {
@@ -29,5 +29,11 @@ class BabyFileHandlerTest extends Specification {
 
         and:
         fileHandler.delete("test")
+
+        and:
+        fileHandler.cleanup()
+
+        and:
+        noExceptionThrown()
     }
 }
