@@ -16,6 +16,7 @@ create TABLE baby_image (
   id VARCHAR(36) PRIMARY KEY,
   latitude DOUBLE,
   longitude DOUBLE,
+  full_address VARCHAR(1000),
   image_datetime datetime,
   client_id VARCHAR(36) NOT NULL,
 

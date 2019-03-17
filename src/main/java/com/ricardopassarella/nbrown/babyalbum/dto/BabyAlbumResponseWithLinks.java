@@ -18,6 +18,7 @@ public class BabyAlbumResponseWithLinks {
     private final String kidAge;
     private final BigDecimal latitude;
     private final BigDecimal longitude;
+    private final String fullAddress;
     private final LocalDateTime dateTime;
     private final String url;
 

@@ -20,16 +20,17 @@ public class BabyAlbumRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    String insert(String clientId, PictureMetadata pictureMetadata) {
+    String insert(String clientId, PictureMetadata pictureMetadata, String fullAddress) {
         String imageId = createId();
 
-        String sql = "INSERT INTO baby_image (id, latitude, longitude, image_datetime, client_id) " +
-                " VALUES (:id, :latitude, :longitude, :imageDatetime, :clientId) ";
+        String sql = "INSERT INTO baby_image (id, latitude, longitude, full_address, image_datetime, client_id) " +
+                " VALUES (:id, :latitude, :longitude, :fullAddress, :imageDatetime, :clientId) ";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", imageId);
         params.addValue("latitude", pictureMetadata.getLatitude());
         params.addValue("longitude", pictureMetadata.getLongitude());
+        params.addValue("fullAddress", fullAddress);
         params.addValue("imageDatetime", pictureMetadata.getLocalDateTime());
         params.addValue("clientId", clientId);
 
@@ -100,6 +101,7 @@ public class BabyAlbumRepository {
                 .id(rs.getString("id"))
                 .latitude(rs.getBigDecimal("latitude"))
                 .longitude(rs.getBigDecimal("longitude"))
+                .fullAddress(rs.getString("full_address"))
                 .dateTime(rs.getObject("image_datetime", LocalDateTime.class))
                 .clientId(rs.getString("client_id"))
                 .build();

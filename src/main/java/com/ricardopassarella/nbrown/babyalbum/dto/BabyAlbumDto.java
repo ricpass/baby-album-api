@@ -15,6 +15,7 @@ public class BabyAlbumDto {
     private final String id;
     private final BigDecimal latitude;
     private final BigDecimal longitude;
+    private final String fullAddress;
     private final LocalDateTime dateTime;
     private final String clientId;
 }

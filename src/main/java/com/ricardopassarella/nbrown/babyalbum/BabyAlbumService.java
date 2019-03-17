@@ -1,10 +1,10 @@
 package com.ricardopassarella.nbrown.babyalbum;
 
+import com.ricardopassarella.nbrown.GeoLocation.ReverseGeocoding;
 import com.ricardopassarella.nbrown.baby.BabyFacade;
 import com.ricardopassarella.nbrown.baby.dto.BabyResponse;
 import com.ricardopassarella.nbrown.babyalbum.dto.*;
 import com.ricardopassarella.nbrown.common.PageableResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
@@ -30,6 +30,7 @@ class BabyAlbumService {
     private final MetadataExtractor metadataExtractor;
     private final BabyFileHandler fileHandler;
     private final BabyFacade babyFacade;
+    private final ReverseGeocoding reverseGeocoding;
 
     private final int pageLimit;
 
@@ -37,11 +38,13 @@ class BabyAlbumService {
                             MetadataExtractor metadataExtractor,
                             BabyFileHandler fileHandler,
                             BabyFacade babyFacade,
+                            ReverseGeocoding reverseGeocoding,
                             @Value("${baby-album.get-images.page.limit}") int pageLimit) {
         this.repository = repository;
         this.metadataExtractor = metadataExtractor;
         this.fileHandler = fileHandler;
         this.babyFacade = babyFacade;
+        this.reverseGeocoding = reverseGeocoding;
         this.pageLimit = pageLimit;
     }
 
@@ -66,7 +69,11 @@ class BabyAlbumService {
     private BabyAlbumUploadResponse processImage(byte[] imageBytes, String clientId) {
         PictureMetadata metadata = metadataExtractor.read(imageBytes);
 
-        String imageId = repository.insert(clientId, metadata);
+        String fullAddress =
+                reverseGeocoding.getFullAddress(metadata.getLatitude(), metadata.getLongitude())
+                        .orElse(null);
+
+        String imageId = repository.insert(clientId, metadata, fullAddress);
 
         fileHandler.save(imageBytes, imageId);
 
@@ -109,6 +116,7 @@ class BabyAlbumService {
                 .kidAge(age)
                 .latitude(dto.getLatitude())
                 .longitude(dto.getLongitude())
+                .fullAddress(dto.getFullAddress())
                 .dateTime(dto.getDateTime())
                 .imageBase64(encodedImage)
                 .build();
@@ -138,6 +146,7 @@ class BabyAlbumService {
                         .kidAge(kidAge)
                         .latitude(dto.getLatitude())
                         .longitude(dto.getLongitude())
+                        .fullAddress(dto.getFullAddress())
                         .dateTime(dto.getDateTime())
                         .url(getPathToGetImageEncodedMethod(dto.getId(), dto.getClientId()))
                         .build())

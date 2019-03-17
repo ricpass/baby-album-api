@@ -1,5 +1,6 @@
 package com.ricardopassarella.nbrown.babyalbum
 
+import com.ricardopassarella.nbrown.GeoLocation.ReverseGeocoding
 import com.ricardopassarella.nbrown.baby.BabyFacade
 import com.ricardopassarella.nbrown.babyalbum.dto.PictureMetadata
 import org.springframework.mock.web.MockMultipartFile
@@ -15,6 +16,7 @@ class BabyAlbumServiceTest extends Specification {
     def metadataExtractor = Mock MetadataExtractor
     def fileHandler = Mock BabyFileHandler
     def babyFacade = Mock BabyFacade
+    def reverseGeocoding = Mock ReverseGeocoding
 
     @Subject
     BabyAlbumService service
@@ -25,6 +27,7 @@ class BabyAlbumServiceTest extends Specification {
                 metadataExtractor,
                 fileHandler,
                 babyFacade,
+                reverseGeocoding,
                 2)
     }
 

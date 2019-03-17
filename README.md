@@ -44,4 +44,4 @@ Recommendation: Import postman collection
 
 Improve metadata extractor to handle more edges cases.
 
-Although the most critical parts have tests, there is a lot more test coverage to do.  
+Although the most critical parts have tests, there is a lot more test coverage to do. For example, add integration tests to make sure the database connections are correct.  
