@@ -107,4 +107,16 @@ class BabyAlbumService {
         URI uri = linkBuilder.toUri();
         return uri.getPath();
     }
+
+    @Transactional
+    public boolean deleteImage(String imageId, String clientId) {
+
+        boolean deleted = repository.deleteImageEntry(imageId, clientId);
+
+        if (deleted){
+            fileHandler.delete(imageId);
+        }
+
+        return deleted;
+    }
 }

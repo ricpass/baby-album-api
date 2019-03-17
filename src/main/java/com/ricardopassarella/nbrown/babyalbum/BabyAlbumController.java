@@ -80,4 +80,16 @@ class BabyAlbumController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping(value = "/{imageId}")
+    public ResponseEntity<Void> delete(@PathVariable("imageId") String imageId,
+                                       @RequestHeader(value = "Client-Id") String clientId) {
+        boolean deleted = service.deleteImage(imageId, clientId.toLowerCase());
+
+        if (deleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

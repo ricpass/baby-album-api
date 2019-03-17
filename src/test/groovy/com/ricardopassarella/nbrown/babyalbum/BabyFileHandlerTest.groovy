@@ -21,13 +21,13 @@ class BabyFileHandlerTest extends Specification {
         byte[] imageBytes = Files.readAllBytes(Paths.get(file))
 
         when:
-        File fileCreated = fileHandler.save(imageBytes, "test")
+        fileHandler.save(imageBytes, "test")
         def imageByteRead = fileHandler.readImageFromFile("test")
 
         then:
         imageByteRead == imageBytes
 
         and:
-        fileCreated.delete()
+        fileHandler.delete("test")
     }
 }

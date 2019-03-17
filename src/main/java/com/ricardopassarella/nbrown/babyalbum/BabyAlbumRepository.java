@@ -82,4 +82,17 @@ public class BabyAlbumRepository {
                 .clientId(rs.getString("client_id"))
                 .build();
     }
+
+    public boolean deleteImageEntry(String imageId, String clientId) {
+        String sql = "delete " +
+                " from baby_image " +
+                " where id = :imageId " +
+                "  and client_id = :clientId";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("imageId", imageId);
+        params.addValue("clientId", clientId);
+
+        return jdbcTemplate.update(sql, params) == 1;
+    }
 }

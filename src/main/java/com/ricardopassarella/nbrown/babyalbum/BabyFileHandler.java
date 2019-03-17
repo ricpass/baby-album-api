@@ -50,8 +50,16 @@ class BabyFileHandler {
             Path path = Paths.get(localStoragePath + "/" + fileName);
             return Files.readAllBytes(path);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to read file");
+            throw new RuntimeException("Failed to read file", e);
         }
     }
 
+    boolean delete(String fileName) {
+        try {
+            Path path = Paths.get(localStoragePath + "/" + fileName);
+            return Files.deleteIfExists(path);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to delete file", e);
+        }
+    }
 }
