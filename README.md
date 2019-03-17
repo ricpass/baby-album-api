@@ -1,6 +1,6 @@
 ## baby-album-api ##
 
-Baby photo album backend with Spring Boot. This project follows Domain Driven Design architecture. 
+Baby photo album backend with Spring Boot. This project follows Domain Driven Design. 
 
 ### Technologies ###
 
@@ -34,10 +34,10 @@ Recommendation: Import postman collection [babyalbum.postman_collection.json](ba
 | PUT     `/baby` | Update baby details. Body must have: name, gender and date_of_birth |
 | GET     `/baby/picture/{imageId}` | Get image as byte[] |
 | POST    `/baby/picture` | Upload image as MultipartFile. [See here how to test with Postman](https://stackoverflow.com/questions/16015548/tool-for-sending-multipart-form-data-request) |
-| GET     `/baby/picture` | Get a list of images with the link to get each image |
+| GET     `/baby/picture` | Get a pageable list of images with the link to get each image |
 | GET     `/baby/picture/json/{imageId}` | Get image encoded as Base64, image details, and baby age|
 | POST    `/baby/picture/json` | Upload image encoded as Base64|
-| GET     `/baby/picture/json` | Get a list of images encoded as Base64 and details. This method can be inefficient, use /baby/picture to get Links and then use /baby/picture/json/{imageId} in parallel.|
+| GET     `/baby/picture/json` | Get a pageable list of images encoded as Base64 and details. This method can be inefficient, instead use /baby/picture to get Links and then use /baby/picture/json/{imageId} in parallel.|
 
 
 ### Improvements ###
