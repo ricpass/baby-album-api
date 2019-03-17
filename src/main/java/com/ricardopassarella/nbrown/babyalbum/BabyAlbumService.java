@@ -3,8 +3,10 @@ package com.ricardopassarella.nbrown.babyalbum;
 import com.ricardopassarella.nbrown.baby.BabyFacade;
 import com.ricardopassarella.nbrown.baby.dto.BabyResponse;
 import com.ricardopassarella.nbrown.babyalbum.dto.*;
+import com.ricardopassarella.nbrown.common.PageableResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,14 +24,26 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 class BabyAlbumService {
 
     private final BabyAlbumRepository repository;
     private final MetadataExtractor metadataExtractor;
     private final BabyFileHandler fileHandler;
-
     private final BabyFacade babyFacade;
+
+    private final int pageLimit;
+
+    public BabyAlbumService(BabyAlbumRepository repository,
+                            MetadataExtractor metadataExtractor,
+                            BabyFileHandler fileHandler,
+                            BabyFacade babyFacade,
+                            @Value("${baby-album.get-images.page.limit}") int pageLimit) {
+        this.repository = repository;
+        this.metadataExtractor = metadataExtractor;
+        this.fileHandler = fileHandler;
+        this.babyFacade = babyFacade;
+        this.pageLimit = pageLimit;
+    }
 
     @Transactional
     public BabyAlbumUploadResponse processImage(MultipartFile multipartFile, String clientId) {
@@ -71,11 +85,18 @@ class BabyAlbumService {
                 .map(this::createBabyAlbumResponse);
     }
 
-    List<BabyAlbumResponse> getImagesAsBase64(String clientId) {
-        return repository.findImagesByClientId(clientId)
+    PageableResponse<List<BabyAlbumResponse>> getImagesAsBase64(String clientId, int page) {
+        int offset = page * pageLimit;
+        int limit = offset + pageLimit;
+
+        List<BabyAlbumResponse> response = repository.findImagesByClientId(clientId, limit, offset)
                 .stream()
                 .map(this::createBabyAlbumResponse)
                 .collect(Collectors.toList());
+
+        Integer count = repository.getTotalCountOfImage(clientId);
+
+        return new PageableResponse<>(response, count);
     }
 
     private BabyAlbumResponse createBabyAlbumResponse(BabyAlbumDto dto) {
@@ -102,8 +123,11 @@ class BabyAlbumService {
                 .build();
     }
 
-    List<BabyAlbumResponseWithLinks> getImagesAsLinks(String clientId) {
-        return repository.findImagesByClientId(clientId)
+    PageableResponse<List<BabyAlbumResponseWithLinks>> getImagesAsLinks(String clientId, int page) {
+        int offset = page * pageLimit;
+        int limit = offset + pageLimit;
+
+        List<BabyAlbumResponseWithLinks> response = repository.findImagesByClientId(clientId, limit, offset)
                 .stream()
                 .map(dto -> BabyAlbumResponseWithLinks.builder()
                         .id(dto.getId())
@@ -113,6 +137,10 @@ class BabyAlbumService {
                         .url(getPathToGetImageEncodedMethod(dto.getId(), dto.getClientId()))
                         .build())
                 .collect(Collectors.toList());
+
+        Integer count = repository.getTotalCountOfImage(clientId);
+
+        return new PageableResponse<>(response, count);
     }
 
     private String getPathToGetImageEncodedMethod(String id, String clientId) {

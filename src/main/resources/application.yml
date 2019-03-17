@@ -8,3 +8,8 @@ spring:
     url: jdbc:mysql://localhost:3306/test?useSSL=false
     username: db_user
     password: db_password
+
+baby-album:
+  get-images:
+    page:
+      limit: 2

@@ -4,6 +4,7 @@ import com.ricardopassarella.nbrown.babyalbum.dto.BabyAlbumImageRequest;
 import com.ricardopassarella.nbrown.babyalbum.dto.BabyAlbumResponse;
 import com.ricardopassarella.nbrown.babyalbum.dto.BabyAlbumResponseWithLinks;
 import com.ricardopassarella.nbrown.babyalbum.dto.BabyAlbumUploadResponse;
+import com.ricardopassarella.nbrown.common.PageableResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -41,9 +42,12 @@ class BabyAlbumController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BabyAlbumResponseWithLinks>> getImagesLinks(@RequestHeader(value = "Client-Id") String clientId) {
+    public ResponseEntity<PageableResponse<List<BabyAlbumResponseWithLinks>>> getImagesLinks(
+            @RequestHeader(value = "Client-Id") String clientId,
+            @RequestParam(value = "page", defaultValue = "0") int page) {
 
-        List<BabyAlbumResponseWithLinks> response = service.getImagesAsLinks(clientId.toLowerCase());
+        PageableResponse<List<BabyAlbumResponseWithLinks>> response =
+                service.getImagesAsLinks(clientId.toLowerCase(), page);
 
         return ResponseEntity.ok(response);
     }
@@ -57,8 +61,9 @@ class BabyAlbumController {
     }
 
     @PostMapping(value = "/json")
-    public ResponseEntity<BabyAlbumUploadResponse> handleFileUploadAsBase64(@RequestBody BabyAlbumImageRequest imageRequest,
-                                                                            @RequestHeader(value = "Client-Id") String clientId) {
+    public ResponseEntity<BabyAlbumUploadResponse> handleFileUploadAsBase64(
+            @RequestBody BabyAlbumImageRequest imageRequest,
+            @RequestHeader(value = "Client-Id") String clientId) {
 
         BabyAlbumUploadResponse response =
                 service.processImage(imageRequest.getImageBase64(), clientId.toLowerCase());
@@ -69,13 +74,15 @@ class BabyAlbumController {
     /*
      * This method can be really inefficient.
      * It is recommend to use BabyAlbumController.getImagesLinks instead to get all the links.
-     * And download the images in multiple requests in paralel.
+     * And download the images in multiple requests in parallel.
      */
     @GetMapping(value = "/json")
-    public ResponseEntity<List<BabyAlbumResponse>> getImagesAsBase64(@RequestHeader(value = "Client-Id") String clientId) {
+    public ResponseEntity<PageableResponse<List<BabyAlbumResponse>>> getImagesAsBase64(
+            @RequestHeader(value = "Client-Id") String clientId,
+            @RequestParam(value = "page", defaultValue = "0") int page) {
 
-
-        List<BabyAlbumResponse> response = service.getImagesAsBase64(clientId.toLowerCase());
+        PageableResponse<List<BabyAlbumResponse>> response
+                = service.getImagesAsBase64(clientId.toLowerCase(), page);
 
         return ResponseEntity.ok(response);
     }

@@ -61,16 +61,38 @@ public class BabyAlbumRepository {
         });
     }
 
-    List<BabyAlbumDto> findImagesByClientId(String clientId) {
+    List<BabyAlbumDto> findImagesByClientId(String clientId, int limit, int offset) {
         String sql = "select b.* " +
                 " from baby_image b " +
                 " where " +
-                "  client_id = :clientId ";
+                "  client_id = :clientId " +
+                "order by b.id " +
+                "limit :limit " +
+                "offset :offset ";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("clientId", clientId);
+        params.addValue("limit", limit);
+        params.addValue("offset", offset);
+
+        return jdbcTemplate.query(sql, params, (rs, rowNum) -> createDto(rs));
+    }
+
+    Integer getTotalCountOfImage(String clientId) {
+        String sql = "select count(1) as count " +
+                " from baby_image b " +
+                " where " +
+                "  client_id = :clientId";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("clientId", clientId);
 
-        return jdbcTemplate.query(sql, params, (rs, rowNum) -> createDto(rs));
+        return jdbcTemplate.query(sql, params, rs -> {
+            if (rs.next()) {
+                return rs.getInt("count");
+            }
+            return 0;
+        });
     }
 
     private BabyAlbumDto createDto(ResultSet rs) throws SQLException {
