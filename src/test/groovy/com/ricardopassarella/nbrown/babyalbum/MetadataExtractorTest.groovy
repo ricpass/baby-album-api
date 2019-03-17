@@ -22,8 +22,8 @@ class MetadataExtractorTest extends Specification {
     def "Read #fileName"() {
         given:
         def file = MetadataExtractorTest.class.getResource(fileName).getFile()
-        def dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         byte[] imageBytes = Files.readAllBytes(Paths.get(file))
+        def dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 
         when:
         def metadata = extractor.read(imageBytes)

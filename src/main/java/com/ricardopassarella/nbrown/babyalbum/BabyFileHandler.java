@@ -1,5 +1,7 @@
 package com.ricardopassarella.nbrown.babyalbum;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -8,17 +10,28 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+@Slf4j
 @Component
 class BabyFileHandler {
 
     private final String localStoragePath;
 
-    public BabyFileHandler() {
-        try {
-            Path tempDirectory = Files.createTempDirectory("baby-album-local-storage");
-            this.localStoragePath = tempDirectory.toString();
-        } catch (IOException e) {
-            throw new IllegalStateException("Failed to create temporary local storage", e);
+    public BabyFileHandler(@Value("${baby-album.localstorage.path:}") String path) {
+        if (path.isEmpty()) {
+            try {
+                Path tempDirectory = Files.createTempDirectory("baby-album-local-storage");
+                tempDirectory.toFile().deleteOnExit();
+                this.localStoragePath = tempDirectory.toString();
+                log.info("Created temporary local storage at " + tempDirectory.toString());
+            } catch (IOException e) {
+                throw new IllegalStateException("Failed to create temporary local storage", e);
+            }
+        } else {
+            if (new File(path).exists()) {
+                this.localStoragePath = path;
+            } else {
+                throw new IllegalStateException("Failed to setup local storage.");
+            }
         }
     }
 

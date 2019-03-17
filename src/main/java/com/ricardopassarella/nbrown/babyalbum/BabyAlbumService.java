@@ -1,13 +1,11 @@
 package com.ricardopassarella.nbrown.babyalbum;
 
-import com.ricardopassarella.nbrown.babyalbum.dto.BabyAlbumDto;
-import com.ricardopassarella.nbrown.babyalbum.dto.BabyAlbumResponse;
-import com.ricardopassarella.nbrown.babyalbum.dto.BabyAlbumResponseWithLinks;
-import com.ricardopassarella.nbrown.babyalbum.dto.PictureMetadata;
+import com.ricardopassarella.nbrown.babyalbum.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -27,28 +25,32 @@ class BabyAlbumService {
     private final MetadataExtractor metadataExtractor;
     private final BabyFileHandler fileHandler;
 
-    void processImage(MultipartFile multipartFile, String clientId) {
+    @Transactional
+    public BabyAlbumUploadResponse processImage(MultipartFile multipartFile, String clientId) {
         try {
             byte[] imageByte = multipartFile.getBytes();
 
-            processImage(imageByte, clientId);
+            return processImage(imageByte, clientId);
         } catch (IOException e) {
             throw new RuntimeException("failed to process image", e);
         }
     }
 
-    void processImage(String imageBase64, String clientId) {
+    @Transactional
+    public BabyAlbumUploadResponse processImage(String imageBase64, String clientId) {
         byte[] imageByte = Base64.getDecoder().decode(imageBase64.getBytes(StandardCharsets.UTF_8));
 
-        processImage(imageByte, clientId);
+        return processImage(imageByte, clientId);
     }
 
-    private void processImage(byte[] imageBytes, String clientId) {
+    private BabyAlbumUploadResponse processImage(byte[] imageBytes, String clientId) {
         PictureMetadata metadata = metadataExtractor.read(imageBytes);
 
         String imageId = repository.insert(clientId, metadata);
 
         fileHandler.save(imageBytes, imageId);
+
+        return new BabyAlbumUploadResponse(imageId);
     }
 
     Optional<byte[]> getImage(String imageId, String clientId) {
@@ -91,12 +93,12 @@ class BabyAlbumService {
                         .latitude(dto.getLatitude())
                         .longitude(dto.getLongitude())
                         .dateTime(dto.getDateTime())
-                        .url(getPathToGetImageMethod(dto.getId(), dto.getClientId()))
+                        .url(getPathToGetImageEncodedMethod(dto.getId(), dto.getClientId()))
                         .build())
                 .collect(Collectors.toList());
     }
 
-    private String getPathToGetImageMethod(String id, String clientId) {
+    private String getPathToGetImageEncodedMethod(String id, String clientId) {
         ControllerLinkBuilder linkBuilder =
                 ControllerLinkBuilder.linkTo(
                         ControllerLinkBuilder.methodOn(BabyAlbumController.class)
