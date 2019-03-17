@@ -20,7 +20,7 @@ public class BabyController {
 
     @GetMapping
     ResponseEntity<BabyResponse> getBabyDetails(@RequestHeader(value = "Client-Id") String clientId) {
-        return service.getBabyDetails(clientId)
+        return service.getBabyDetails(clientId.toLowerCase())
                 .map(babyResponse -> new ResponseEntity<>(babyResponse, OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -28,7 +28,7 @@ public class BabyController {
     @PutMapping
     ResponseEntity<Void> updateBabyDetails(@RequestHeader(value = "Client-Id") String clientId,
                                            @RequestBody BabyRequest babyRequest) {
-        service.updateBabyDetails(clientId, babyRequest);
+        service.updateBabyDetails(clientId.toLowerCase(), babyRequest);
 
         return new ResponseEntity<>(NO_CONTENT);
     }
