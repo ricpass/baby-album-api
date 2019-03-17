@@ -39,3 +39,9 @@ Recommendation: Import postman collection
 | POST   | `/baby/picture/json` | Upload image encoded as Base64|
 | GET    | `/baby/picture/json` | Get a list of images encoded as Base64 and details. This method can be inefficient, use /baby/picture to get Links and then use /baby/picture/json/{imageId} in parallel.|
 
+
+### Improvements ###
+
+Improve metadata extractor to handle more edges cases.
+
+Although the most critical parts have tests, there is a lot more test coverage to do.  
